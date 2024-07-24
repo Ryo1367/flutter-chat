@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chat_app/pages/register_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 Future<void> main() async {
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'チャットアプリ',
-      home: Scaffold(), // TODO: 後ほど初期ページに変更
+      home: RegisterPage(), // RegisterPageを表示するように変更
     );
   }
 }
