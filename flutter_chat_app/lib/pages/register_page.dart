@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chat_app/pages/login_page.dart';
 import 'package:flutter_chat_app/utils/constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -112,7 +113,7 @@ class _RegisterPageState extends State<RegisterPage> {
             TextButton(
               onPressed: () {
                 // TODO: ログインページが実装できたらコメントを外す
-                // Navigator.of(context).push(LoginPage.route());
+                 Navigator.of(context).push(LoginPage.route());
               },
               child: const Text('すでにアカウントをお持ちの方はこちら'),
             )
