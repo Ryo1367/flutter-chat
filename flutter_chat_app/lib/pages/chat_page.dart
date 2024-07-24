@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chat_app/models/message.dart';
 import 'package:flutter_chat_app/pages/register_page.dart';
 import 'package:flutter_chat_app/utils/constants.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// 他のユーザーとチャットができるページ
 ///
@@ -20,6 +21,83 @@ class ChatPage extends StatefulWidget {
 
   @override
   State<ChatPage> createState() => _ChatPageState();
+}
+
+// チャット入力用のテキストフィールドと送信ボタンを持つウィジェット
+class _MessageBar extends StatefulWidget {
+  const _MessageBar({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<_MessageBar> createState() => _MessageBarState();
+}
+
+class _MessageBarState extends State<_MessageBar> {
+  late final TextEditingController _textController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.grey[200],
+      child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              Expanded(
+                child: TextFormField(
+                  keyboardType: TextInputType.text,
+                  maxLines: null, // 複数行入力を可能にする
+                  autofocus: true, // ページを開いた際に自動的にフォーカスする
+                  controller: _textController,
+                  decoration: const InputDecoration(
+                    hintText: 'メッセージを入力',
+                    border: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    contentPadding: EdgeInsets.all(8),
+                  ),
+                ),
+              ),
+              TextButton(
+                onPressed: () => _submitMessage(),
+                child: const Text('送信'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _textController.dispose();
+    super.dispose();
+  }
+
+  // メッセージを送信する
+  void _submitMessage() async {
+    final text = _textController.text;
+    final myUserId = supabase.auth.currentUser!.id;
+    if(text.isEmpty) {
+      // 入力された文字がなければ何もしない
+      return;
+    }
+    _textController.clear();
+    try {
+      await supabase.from('messages').insert({
+        'profile_id': myUserId,
+        'content': text,
+      });
+    } on PostgrestException catch (error) {
+      // エラーが発生した場合はエラーメッセージを表示
+      context.showErrorSnackBar(message: error.message);
+    } catch (_) {
+      // 予期せぬエラーが起きた際は予期せぬエラー用のメッセージを表示
+      context.showErrorSnackBar(message: unexpectedErrorMessage);
+    }
+  }
 }
 
 class _ChatPageState extends State<ChatPage> {
@@ -79,7 +157,7 @@ class _ChatPageState extends State<ChatPage> {
                           },
                         ),
                 ),
-                // ここに後でメッセージ送信ウィジェットを追加
+                _MessageBar(),
               ],
             );
           } else {
