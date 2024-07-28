@@ -37,6 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.6
   envied: ^0.5.4+1
   supabase_flutter: ^2.5.9
+  timeago: ^3.7.0
 
 dev_dependencies:
   flutter_test:
