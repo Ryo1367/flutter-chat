@@ -33,6 +33,22 @@ class _MessageBar extends StatefulWidget {
   State<_MessageBar> createState() => _MessageBarState();
 }
 
+// チャットのメッセージを表示するウィジェット
+class _ChatBubble extends StatelessWidget {
+  const _ChatBubble({
+    Key? key,
+    required this.message,
+  }) : super(key: key);
+
+  // メッセージの本文
+  final Message message;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(message.content);
+  }
+}
+
 class _MessageBarState extends State<_MessageBar> {
   late final TextEditingController _textController = TextEditingController();
 
@@ -153,7 +169,10 @@ class _ChatPageState extends State<ChatPage> {
                           itemCount: messages.length,
                           itemBuilder: (context, index) {
                             final message = messages[index];
-                            return Text(message.content);
+
+                            return _ChatBubble(
+                              message: message,
+                            );
                           },
                         ),
                 ),
